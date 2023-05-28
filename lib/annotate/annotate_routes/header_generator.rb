@@ -1,4 +1,5 @@
 require_relative './helpers'
+require 'rails/commands'
 
 module AnnotateRoutes
   class HeaderGenerator
@@ -16,12 +17,12 @@ module AnnotateRoutes
       private
 
       def routes_map(options)
-        result = `rake routes`.chomp("\n").split(/\n/, -1)
+        result = `rails routes`.chomp("\n").split(/\n/, -1)
 
         # In old versions of Rake, the first line of output was the cwd.  Not so
         # much in newer ones.  We ditch that line if it exists, and if not, we
         # keep the line around.
-        result.shift if result.first =~ %r{^\(in \/}
+        result.shift if result.first =~ %r{^\(in /}
 
         ignore_routes = options[:ignore_routes]
         regexp_for_ignoring_routes = ignore_routes ? /#{ignore_routes}/ : nil
